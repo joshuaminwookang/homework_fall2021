@@ -81,7 +81,7 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
             observation = obs[None]
 
         # TODO return the action that the policy prescribes
-        observation = ptu.from_numpy(observation.astype(np.float32))
+        observation = ptu.from_numpy(observation)
         action = self(observation)
         return ptu.to_numpy(action) 
         #raise NotImplementedError
@@ -116,8 +116,8 @@ class MLPPolicySL(MLPPolicy):
             adv_n=None, acs_labels_na=None, qvals=None
     ):
         # TODO: update the policy and return the loss
-        input_action = self(ptu.from_numpy(observations.astype(np.float32)))
-        target_action = torch.tensor(actions, requires_grad=True)
+        input_action = self(ptu.from_numpy(observations))
+        target_action = ptu.from_numpy(actions)
         loss = self.loss(input_action,target_action)
         self.optimizer.zero_grad()
         loss.backward()
