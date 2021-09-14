@@ -213,6 +213,19 @@ class RL_Trainer(object):
 
     ####################################
     ####################################
+    def write_log_csv(self, logs):
+        import csv
+        n_iter=int(self.params['n_iter'])
+
+        if n_iter > 1:
+            logdir = "{}_{}.csv".format(self.logger._log_dir, n_iter)
+        else: 
+            logdir = "{}_train-steps_{}.csv".format(self.logger._log_dir, self.params['train_batch_size'])
+
+        with open(logdir, "w") as outfile:
+            csvwriter = csv.writer(outfile)
+            csvwriter.writerow(logs.keys())
+            csvwriter.writerow(logs.values())
 
     def perform_logging(self, itr, paths, eval_policy, train_video_paths, training_logs):
 
@@ -258,6 +271,7 @@ class RL_Trainer(object):
 
             logs["Train_EnvstepsSoFar"] = self.total_envsteps
             logs["TimeSinceStart"] = time.time() - self.start_time
+            logs["Train_Batch_Size"] = self.params['train_batch_size']
             last_log = training_logs[-1]  # Only use the last log for now
             logs.update(last_log)
 
@@ -271,5 +285,5 @@ class RL_Trainer(object):
                 print('{} : {}'.format(key, value))
                 self.logger.log_scalar(value, key, itr)
             print('Done logging...\n\n')
-
+            self.write_log_csv(logs)
             self.logger.flush()
