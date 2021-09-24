@@ -155,7 +155,7 @@ class RL_Trainer(object):
 
     def collect_training_trajectories(self, itr, initial_expertdata, collect_policy, batch_size):
         if itr < 1:
-            loaded_paths = pickle.load(open(load_initial_expertdata, "rb"))
+            loaded_paths = pickle.load(open(initial_expertdata, "rb"))
             return loaded_paths, 0, None
         
         # collect `batch_size` samples to be used for training
