@@ -65,19 +65,16 @@ class PGAgent(BaseAgent):
             # functions should only take in a single list for a single trajectory.
 
         # Case 1: trajectory-based PG
-        # Estimate Q^{pi}(s_t, a_t) by the total discounted reward summed over entire trajectory
-        # HINT3: q_values should be a 2D numpy array where the first
+          # HINT3: q_values should be a 2D numpy array where the first
             # dimension corresponds to trajectories and the second corresponds
             # to timesteps
-
         if not self.reward_to_go:
-            TODO
+            q_values = np.array(list(map(lambda x: self._discounted_return(x), rewards_list)))
 
         # Case 2: reward-to-go PG
         # Estimate Q^{pi}(s_t, a_t) by the discounted sum of rewards starting from t
         else:
-            TODO
-
+            q_values = np.array(list(map(lambda x: self._discounted_cumsum(x), rewards_list)))
         return q_values
 
     def estimate_advantage(self, obs, rews_list, q_values, terminals):
@@ -161,7 +158,18 @@ class PGAgent(BaseAgent):
         """
 
         # TODO: create list_of_discounted_returns
-
+        # list_of_discounted_returns = map(lambda x: rewards.index(x) , )
+        list_of_discounted_returns = []
+        running_sum = 0
+        for i in range(0,len(rewards)):
+            running_sum += rewards[i] * (self.gamma ** i)
+        list_of_discounted_returns = [running_sum] * len(rewards)
+        
+        # discount = 1
+        # for r in rewards :
+        #     running_sum += r * discount
+        #     list_of_discounted_returns.append(running_sum)
+        #     discount *= self.gamma
         return list_of_discounted_returns
 
     def _discounted_cumsum(self, rewards):
@@ -174,5 +182,5 @@ class PGAgent(BaseAgent):
         # TODO: create `list_of_discounted_returns`
         # HINT: it is possible to write a vectorized solution, but a solution
             # using a for loop is also fine
-
+        list_of_discounted_cumsums = map(lambda x: self._discounted_return(rewards[rewards.index(x):]),  rewards)
         return list_of_discounted_cumsums

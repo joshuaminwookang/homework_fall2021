@@ -86,7 +86,13 @@ class MLPPolicy(BasePolicy, nn.Module, metaclass=abc.ABCMeta):
 
     # query the policy with observation(s) to get selected action(s)
     def get_action(self, obs: np.ndarray) -> np.ndarray:
-        # TODO: get this from HW1
+        if len(obs.shape) > 1:
+            observation = obs
+        else:
+            observation = obs[None]
+        observation = ptu.from_numpy(observation)
+        action = self(observation)
+        return ptu.to_numpy(action) 
 
     # update/train this policy
     def update(self, observations, actions, **kwargs):
@@ -127,6 +133,10 @@ class MLPPolicyPG(MLPPolicy):
         actions = ptu.from_numpy(actions)
         advantages = ptu.from_numpy(advantages)
 
+        loss = self.loss(input_action,target_action)
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
         # TODO: update the policy using policy gradient
         # HINT1: Recall that the expression that we want to MAXIMIZE
             # is the expectation over collected trajectories of:
