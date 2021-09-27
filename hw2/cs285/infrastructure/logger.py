@@ -69,6 +69,15 @@ class Logger:
     def flush(self):
         self._summ_writer.flush()
 
+    # def write_log_csv(self, scalar_dict, group_name, step, phase):
+    #     import csv
+    #     logdir = "{}/scalars.csv".format(self.logger._log_dir)
+
+    #     with open(logdir, "w") as outfile:
+    #         csvwriter = csv.writer(outfile)
+    #         csvwriter.writerow(logs.keys())
+    #         csvwriter.writerow(logs.values())
+
 
 
 
