@@ -46,7 +46,7 @@ class PGAgent(BaseAgent):
         # HINT2: look at the MLPPolicyPG class for how to update the policy
             # and obtain a train_log
         q_values = self.calculate_q_vals(rewards_list)
-        advantages = self.estimate_advantage(observations, rewards_list, q_values, None)
+        advantages = self.estimate_advantage(observations, rewards_list, q_values, terminals)
         train_log = self.actor.update(observations, actions, advantages, q_values)
 
         return train_log
@@ -119,7 +119,7 @@ class PGAgent(BaseAgent):
                         ## 0 otherwise.
                     ## HINT 2: self.gae_lambda is the lambda value in the
                         ## GAE formula
-                    print(i)
+                    advantages[i] = rews[i] - values[i] + ( self.gamma*values[i+1] + self.gamma*self.gae_lambda*advantages[i+1] ) * (1-terminals[i])
 
                 # remove dummy advantage
                 advantages = advantages[:-1]
