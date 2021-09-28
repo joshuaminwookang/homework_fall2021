@@ -68,7 +68,6 @@ class PGAgent(BaseAgent):
             # functions should only take in a single list for a single trajectory.
 
         # Case 1: trajectory-based PG
-        max_len = max([len(r) for r in rewards_list])
         # Estimate Q^{pi}(s_t, a_t) by the total discounted reward summed over entire trajectory
         # HINT3: q_values should be a 1D numpy array where the indices correspond to the same
         # ordering as observations, actions, etc.
@@ -79,11 +78,6 @@ class PGAgent(BaseAgent):
         # Estimate Q^{pi}(s_t, a_t) by the discounted sum of rewards starting from t
         else:
             q_values = [self._discounted_cumsum(r) for r in rewards_list]
-        # for r in q_values:
-        #     while len(r) < max_len:
-        #         r.append(None)
-        # q_values = np.array(q_values, dtype='float32')
-        # print(q_values)
         q_values = np.array([r for traj in q_values for r in traj], dtype='float32')
         return q_values
 
@@ -103,9 +97,7 @@ class PGAgent(BaseAgent):
             ## TODO: values were trained with standardized q_values, so ensure
                 ## that the predictions have the same mean and standard deviation as
                 ## the current batch of q_values
-            values = 0
-            assert np.mean(values_unnormalized) == np.mean(q_values)
-            assert np.std(values_unnormalized) == np.std(q_values)
+            values = (values_unnormalized - np.mean(values_unnormalized)) / np.std(values_unnormalized) * np.std(q_values) + np.mean(q_values)
 
             if self.gae_lambda is not None:
                 ## append a dummy T+1 value for simpler recursive calculation
@@ -134,7 +126,7 @@ class PGAgent(BaseAgent):
 
             else:
                 ## TODO: compute advantage estimates using q_values, and values as baselines
-                advantages = q_values.copy()
+                advantages = q_values.copy() - values
 
         # Else, just set the advantage to [Q]
         else:

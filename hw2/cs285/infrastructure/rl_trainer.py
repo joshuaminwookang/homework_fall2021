@@ -187,14 +187,19 @@ class RL_Trainer(object):
 
     ####################################
     ####################################
-    def write_log_csv(self, logs):
+    def write_log_csv(self, logs, itr):
         import csv
         logdir = "{}/{}.csv".format(self.logger._log_dir, self.params['tag'])
 
-        with open(logdir, "w") as outfile:
-            csvwriter = csv.writer(outfile)
-            csvwriter.writerow(logs.keys())
-            csvwriter.writerow(logs.values())
+        if itr < 1:
+            with open(logdir, "w") as outfile:
+                csvwriter = csv.writer(outfile)
+                csvwriter.writerow(logs.keys())
+                csvwriter.writerow(logs.values())
+        else :
+            with open(logdir, "a") as outfile:
+                csvwriter = csv.writer(outfile)
+                csvwriter.writerow(logs.values())
 
     def perform_logging(self, itr, paths, eval_policy, train_video_paths, all_logs):
 
@@ -257,5 +262,5 @@ class RL_Trainer(object):
                 print('{} : {}'.format(key, value))
                 self.logger.log_scalar(value, key, itr)
             print('Done logging...\n\n')
-            self.write_log_csv(logs)
+            self.write_log_csv(logs, itr)
             self.logger.flush()
