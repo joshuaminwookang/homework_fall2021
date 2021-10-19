@@ -28,7 +28,6 @@ class Q_Trainer(object):
         self.params['env_wrappers'] = self.agent_params['env_wrappers']
 
         self.rl_trainer = RL_Trainer(self.params)
-
     def run_training_loop(self):
         self.rl_trainer.run_training_loop(
             self.agent_params['num_timesteps'],
@@ -55,6 +54,8 @@ def main():
     parser.add_argument('--num_agent_train_steps_per_iter', type=int, default=1)
     parser.add_argument('--num_critic_updates_per_agent_update', type=int, default=1)
     parser.add_argument('--double_q', action='store_true')
+    parser.add_argument('--learning_freq', type=int, default=1)
+
 
     parser.add_argument('--seed', type=int, default=1)
     parser.add_argument('--no_gpu', '-ngpu', action='store_true')
