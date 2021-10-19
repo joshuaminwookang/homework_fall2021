@@ -23,7 +23,7 @@ class DQNCritic(BaseCritic):
         self.double_q = hparams['double_q']
         self.grad_norm_clipping = hparams['grad_norm_clipping']
         self.gamma = hparams['gamma']
-
+    
         self.optimizer_spec = optimizer_spec
         network_initializer = hparams['q_func']
         self.q_net = network_initializer(self.ob_dim, self.ac_dim)
@@ -67,7 +67,7 @@ class DQNCritic(BaseCritic):
         q_t_values = torch.gather(qa_t_values, 1, ac_na.unsqueeze(1)).squeeze(1)
         
         # TODO compute the Q-values from the target network 
-        qa_tp1_values = self.q_net(next_ob_no)
+        qa_tp1_values = self.q_net_target(next_ob_no)
 
         if self.double_q:
             # You must fill this part for Q2 of the Q-learning portion of the homework.
@@ -82,7 +82,7 @@ class DQNCritic(BaseCritic):
         # TODO compute targets for minimizing Bellman error
         # HINT: as you saw in lecture, this would be:
             #currentReward + self.gamma * qValuesOfNextTimestep * (not terminal)
-        target = reward_n + self.gamma * qa_tp1_values * (not terminal_n)
+        target = reward_n + self.gamma * q_tp1 * (terminal_n < 1)
         target = target.detach()
 
         assert q_t_values.shape == target.shape

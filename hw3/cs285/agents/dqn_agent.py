@@ -51,13 +51,12 @@ class DQNAgent(object):
         eps = self.exploration.value(self.t)
 
         # TODO use epsilon greedy exploration when selecting action
-        print("EPSILON: "eps)
         perform_random_action = (np.random.random() < eps) or (self.t < self.learning_starts)
         if perform_random_action:
             # HINT: take random action 
                 # with probability eps (see np.random.random())
                 # OR if your current step number (see self.t) is less that self.learning_starts
-            action = 
+            action = np.random.randint(0, self.num_actions)
         else:
             # HINT: Your actor will take in multiple previous observations ("frames") in order
                 # to deal with the partial observability of the environment. Get the most recent 
