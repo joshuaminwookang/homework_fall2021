@@ -130,7 +130,7 @@ class MLPPolicyAC(MLPPolicy):
     def update(self, observations, actions, adv_n=None):
         # TODO: update the policy and return the loss
         observations = ptu.from_numpy(observations)
-        # actions = ptu.from_numpy(acs_na)
+        actions = ptu.from_numpy(actions)
         adv_n = ptu.from_numpy(adv_n)
 
         action_distribution = self(observations)
@@ -141,18 +141,7 @@ class MLPPolicyAC(MLPPolicy):
         loss.backward()
         self.optimizer.step()
 
-        if self.nn_baseline:
-            targets_n = normalize(qvals, np.mean(qvals), np.std(qvals))
-            targets_n = ptu.from_numpy(targets_n)
-            baseline_predictions = self.baseline(observations).squeeze()
-            assert baseline_predictions.dim() == baseline_predictions.dim()
-
-            baseline_loss = F.mse_loss(baseline_predictions, targets_n)
-            self.baseline_optimizer.zero_grad()
-            baseline_loss.backward()
-            self.baseline_optimizer.step()
-
-        return {
-            'Training Loss': ptu.to_numpy(loss),
-        }
+        # return {
+        #     'Training Loss': ptu.to_numpy(loss),
+        # }
         return loss.item()
