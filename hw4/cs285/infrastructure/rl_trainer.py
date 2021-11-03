@@ -69,7 +69,8 @@ class RL_Trainer(object):
         if not(self.params['env_name']=='obstacles-cs285-v0'):
             import matplotlib
             matplotlib.use('Agg')
-
+        # import matplotlib
+        # matplotlib.use('Agg')
         # Maximum length for episodes
         self.params['ep_len'] = self.params['ep_len'] or self.env.spec.max_episode_steps
         global MAX_VIDEO_LEN

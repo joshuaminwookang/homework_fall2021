@@ -53,7 +53,7 @@ class MPCPolicy(BasePolicy):
             # TODO(Q1) uniformly sample trajectories and return an array of
             # dimensions (num_sequences, horizon, self.ac_dim) in the range
             # [self.low, self.high]
-            return random_action_sequences
+            return self.low + (self.high - self.low) * np.random.rand(num_sequences, horizon, self.ac_dim)
         elif self.sample_strategy == 'cem':
             # TODO(Q5): Implement action selection using CEM.
             # Begin with randomly selected actions, then refine the sampling distribution
@@ -84,10 +84,12 @@ class MPCPolicy(BasePolicy):
         #
         # Then, return the mean predictions across all ensembles.
         # Hint: the return value should be an array of shape (N,)
-        for model in self.dyn_models:
-            pass
 
-        return TODO
+        rewards = []
+        for model in self.dyn_models:
+            rewards.append(self.calculate_sum_of_rewards(obs, candidate_action_sequences,model))
+
+        return np.mean(rewards,axis=0)
 
     def get_action(self, obs):
         if self.data_statistics is None:
@@ -121,7 +123,10 @@ class MPCPolicy(BasePolicy):
         :return: numpy array with the sum of rewards for each action sequence.
         The array should have shape [N].
         """
-        sum_of_rewards = None  # TODO (Q2)
+        predicted_states = model.get_prediction(obs,candidate_action_sequences,self.data_statistics)
+        print(candidate_action_sequences.shape)
+        print(predicted_states.shape)
+        sum_of_rewards = np.sum(self.env.get_reward(predicted_states, candidate_action_sequences))  # TODO (Q2)
         # For each candidate action sequence, predict a sequence of
         # states for each dynamics model in your ensemble.
         # Once you have a sequence of predicted states from each model in
