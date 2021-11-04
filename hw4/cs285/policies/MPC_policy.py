@@ -68,8 +68,13 @@ class MPCPolicy(BasePolicy):
                     action_sequence = np.random.normal(cem_mean, cem_std, (num_sequences*horizon, self.ac_dim))
                 rewards = self.env.get_reward(np.tile(obs, (num_sequences*horizon,1)), action_sequence)[0]
                 summed_rewards = np.sum(np.reshape(rewards, (num_sequences, horizon)), axis=1)
-                elites = np.reshape(action_sequence[summed_rewards.argsort()[-self.cem_num_elites:][::-1]], (num_sequences, horizon, self.ac_dim))
+                print(summed_rewards.shape)
+                elites = action_sequence[summed_rewards.argsort()[-self.cem_num_elites:][::-1]]
                 print(elites)
+                print(horizon)
+                print(np.mean(elites, axis=1))
+                cem_mean = self.cem_alpha*np.mean(elites, axis=1) +  (1-self.cem_alpha) * cem_mean
+                cem_std = self.cem_alpha*np.std(elites, axis=1) +  (1-self.cem_alpha) * cem_mean
 
                 # print(elites)
 
