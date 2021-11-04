@@ -36,7 +36,6 @@ class HalfCheetahEnv(mujoco_env.MujocoEnv, utils.EzPickle):
             batch_mode = False
         else:
             batch_mode = True
-
         #get vars
         xvel = observations[:, 9].copy()
         body_angle = observations[:, 2].copy()

@@ -9,21 +9,11 @@ SOURCE_AC="cs285/scripts/run_hw3_actor_critic.py"
 cd $SCRIPT_DIR/../../
 if [[ $EXP_NUM == 1 ]]; then
     echo "Experiment 1: MBRL with Random Policy "
-    # declare -a pendulum_b_sizes=("50" "100" "200" "500" "1000" )
-    # declare -a pendulum_r_sizes=( "0.005" "0.01" "0.02" "0.05")  
-    # for b in "${pendulum_b_sizes[@]}"
-    # do 
-    #     for r in "${pendulum_r_sizes[@]}" 
-    #     do 
-    #         echo $b $r
-    #         python $SOURCE --env_name InvertedPendulum-v2 --ep_len 1000 --discount 0.9 -n 100 -l 2 -s 64 -b $b -lr $r -rtg --exp_name q2_b"$b"_r"$r" 
-    #     done
-    # done
-    # python cs285/scripts/run_hw4_mb.py --exp_name q1_cheetah_n500_arch1x32 --env_name cheetah-cs285-v0 \
-    #     --add_sl_noise --n_iter 1 \
-    #     --batch_size_initial 20000 --num_agent_train_steps_per_iter 500 \
-    #     --n_layers 1 --size 32 --scalar_log_freq -1 --video_log_freq -1 \
-    #     --mpc_action_sampling_strategy 'random'
+    python cs285/scripts/run_hw4_mb.py --exp_name q1_cheetah_n500_arch1x32 --env_name cheetah-cs285-v0 \
+        --add_sl_noise --n_iter 1 \
+        --batch_size_initial 20000 --num_agent_train_steps_per_iter 500 \
+        --n_layers 1 --size 32 --scalar_log_freq -1 --video_log_freq -1 \
+        --mpc_action_sampling_strategy 'random'
     python cs285/scripts/run_hw4_mb.py --exp_name q1_cheetah_n5_arch2x250 --env_name cheetah-cs285-v0 \
         --add_sl_noise --n_iter 1 \
         --batch_size_initial 20000 --num_agent_train_steps_per_iter 5 \
@@ -39,19 +29,55 @@ elif [[ $EXP_NUM == 2 ]]; then
     python cs285/scripts/run_hw4_mb.py --exp_name q2_obstacles_singleiteration --env_name obstacles-cs285-v0 \
     --add_sl_noise --num_agent_train_steps_per_iter 20 --n_iter 1 \
     --batch_size_initial 5000 --batch_size 1000 --mpc_horizon 10 \
-    --mpc_action_sampling_strategy 'random'
+    --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+elif [[ $EXP_NUM == 3 ]]; then
+    echo "Experiment 3: MBRL with Trained MPC Policy--Longer"
+    # python cs285/scripts/run_hw4_mb.py --exp_name q3_obstacles --env_name obstacles-cs285-v0 \
+    # --add_sl_noise --num_agent_train_steps_per_iter 20 --n_iter 12 \
+    # --batch_size_initial 5000 --batch_size 1000 --mpc_horizon 10 \
+    # --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    # python cs285/scripts/run_hw4_mb.py --exp_name q3_reacher --env_name reacher-cs285-v0 \
+    # --add_sl_noise --num_agent_train_steps_per_iter 1000 --n_iter 15 \
+    # --batch_size_initial 5000 --batch_size 5000 --mpc_horizon 10 \
+    # --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name  q3_cheetah --env_name cheetah-cs285-v0 \
+    --add_sl_noise --num_agent_train_steps_per_iter 1500 --n_iter 20 \
+    --batch_size_initial 5000 --batch_size 5000 --mpc_horizon 10 \
+    --mpc_action_sampling_strategy 'random' --video_log_freq -1 
 elif [[ $EXP_NUM == 4 ]]; then
-    echo "Experiment 4: Actor Critic CartPole"
-    python $SOURCE_AC --env_name CartPole-v0 -n 100 -b 1000 --exp_name q4_ac_1_1 -ntu 1 -ngsptu 1
-    python $SOURCE_AC --env_name CartPole-v0 -n 100 -b 1000 --exp_name q4_ac_1_100 -ntu 1 -ngsptu 100
-    python $SOURCE_AC --env_name CartPole-v0 -n 100 -b 1000 --exp_name q4_ac_100_1 -ntu 100 -ngsptu 1
-    python $SOURCE_AC --env_name CartPole-v0 -n 100 -b 1000 --exp_name q4_ac_10_10 -ntu 10 -ngsptu 10
+    echo "Experiment 4: MBRL with Trained MPC Policy Variables"
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_horizon5 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 5 --num_agent_train_steps_per_iter 1000 \
+    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_horizon15 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 15 --num_agent_train_steps_per_iter 1000 \
+    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_horizon30 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 30 --num_agent_train_steps_per_iter 1000 \
+    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_numseq100 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 --video_log_freq -1 \
+    --batch_size 800 --n_iter 15 --mpc_num_action_sequences 100 --mpc_action_sampling_strategy 'random'
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_numseq1000 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 --video_log_freq -1 \
+    --batch_size 800 --n_iter 15 --mpc_num_action_sequences 1000 --mpc_action_sampling_strategy 'random'
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_ensemble1 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 --video_log_freq -1 \
+    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 1 --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_ensemble3 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 \
+    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 3 --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_ensemble5 --env_name reacher-cs285-v0 \
+    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 \
+    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 5 --video_log_freq -1 
 elif [[ $EXP_NUM == 5 ]]; then
-    echo "Experiment 5: Actor Critic HalfCheetah"
-    # python $SOURCE_AC --env_name InvertedPendulum-v2 --ep_len 1000 --discount 0.95 -n 100 -l 2 -s 64 -b 5000 -lr 0.01 \
-    #     --exp_name q5_10_10 -ntu 10 -ngsptu 10
-    python $SOURCE_AC --env_name HalfCheetah-v2 --ep_len 150 --discount 0.90 --scalar_log_freq 1 -n 150 -l 2 -s 32 \
-        -b 30000 -eb 1500 -lr 0.02 --exp_name q5_10_10 -ntu 10 -ngsptu 10
+    echo "Experiment 5: CEM on Cheetah"
+    # python cs285/scripts/run_hw4_mb.py --exp_name q3_cheetah_cem_1000 --env_name 'cheetah-cs285-v0' --mpc_horizon 15\
+    #  --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
+    #  --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q3_cheetah_cem_1000 --env_name 'cheetah-cs285-v0' --mpc_horizon 15\
+     --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
+     --mpc_action_sampling_strategy 'cem' --cem_iterations 2 --video_log_freq -1 
 else
     echo "Nothing to be done"
 fi
