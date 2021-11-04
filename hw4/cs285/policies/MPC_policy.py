@@ -59,8 +59,8 @@ class MPCPolicy(BasePolicy):
             # Begin with randomly selected actions, then refine the sampling distribution
             # iteratively as described in Section 3.3, "Iterative Random-Shooting with Refinement" of
             # https://arxiv.org/pdf/1909.11652.pdf
-            cem_mean = 0
-            cem_std = 0
+            cem_mean = np.zeros(horizon)
+            cem_std =  np.zeros(horizon)
             for i in range(self.cem_iterations):
                 if i == 0 :
                     action_sequence = self.low + (self.high - self.low) * np.random.rand(num_sequences*horizon, self.ac_dim)
@@ -68,9 +68,10 @@ class MPCPolicy(BasePolicy):
                     action_sequence = np.random.normal(cem_mean, cem_std, (num_sequences*horizon, self.ac_dim))
                 rewards = self.env.get_reward(np.tile(obs, (num_sequences*horizon,1)), action_sequence)[0]
                 summed_rewards = np.sum(np.reshape(rewards, (num_sequences, horizon)), axis=1)
-                print(summed_rewards.shape)
-                elites = rewards.argsort()[-self.cem_num_elites:][::-1]
-                # print(elites)python
+                elites = np.reshape(action_sequence[summed_rewards.argsort()[-self.cem_num_elites:][::-1]], (num_sequences, horizon, self.ac_dim))
+                print(elites)
+
+                # print(elites)
 
                 # - Sample candidate sequences from a Gaussian with the current
                 #   elite mean and variance
