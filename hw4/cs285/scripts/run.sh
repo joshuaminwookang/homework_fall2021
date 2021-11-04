@@ -72,12 +72,15 @@ elif [[ $EXP_NUM == 4 ]]; then
     --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 5 --video_log_freq -1 
 elif [[ $EXP_NUM == 5 ]]; then
     echo "Experiment 5: CEM on Cheetah"
-    # python cs285/scripts/run_hw4_mb.py --exp_name q3_cheetah_cem_1000 --env_name 'cheetah-cs285-v0' --mpc_horizon 15\
-    #  --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
-    #  --mpc_action_sampling_strategy 'random' --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name q3_cheetah_cem_1000 --env_name 'cheetah-cs285-v0' --mpc_horizon 15\
+    python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_random --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
+     --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
+     --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_cem_2 --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
      --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
      --mpc_action_sampling_strategy 'cem' --cem_iterations 2 --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_cem_4 --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
+     --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
+     --mpc_action_sampling_strategy 'cem' --cem_iterations 4 --video_log_freq -1 
 else
     echo "Nothing to be done"
 fi

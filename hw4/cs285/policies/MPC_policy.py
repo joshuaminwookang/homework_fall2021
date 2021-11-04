@@ -59,25 +59,19 @@ class MPCPolicy(BasePolicy):
             # Begin with randomly selected actions, then refine the sampling distribution
             # iteratively as described in Section 3.3, "Iterative Random-Shooting with Refinement" of
             # https://arxiv.org/pdf/1909.11652.pdf
-            cem_mean = np.zeros(horizon)
-            cem_std =  np.zeros(horizon)
+            cem_mean = np.zeros((horizon, self.ac_dim))
+            cem_std =  np.zeros((horizon, self.ac_dim))
             for i in range(self.cem_iterations):
                 if i == 0 :
-                    action_sequence = self.low + (self.high - self.low) * np.random.rand(num_sequences*horizon, self.ac_dim)
+                    action_sequence = self.low + (self.high - self.low) * np.random.rand(num_sequences, horizon, self.ac_dim)
                 else :
-                    action_sequence = np.random.normal(cem_mean, cem_std, (num_sequences*horizon, self.ac_dim))
-                rewards = self.env.get_reward(np.tile(obs, (num_sequences*horizon,1)), action_sequence)[0]
+                    action_sequence = np.random.normal(cem_mean, cem_std, (num_sequences, horizon, self.ac_dim))
+                flatten_acs = np.reshape(action_sequence, (num_sequences*horizon, self.ac_dim))
+                rewards = self.env.get_reward(np.tile(obs, (num_sequences*horizon,1)), flatten_acs)[0]
                 summed_rewards = np.sum(np.reshape(rewards, (num_sequences, horizon)), axis=1)
-                print(summed_rewards.shape)
                 elites = action_sequence[summed_rewards.argsort()[-self.cem_num_elites:][::-1]]
-                print(elites)
-                print(horizon)
-                print(np.mean(elites, axis=1))
-                cem_mean = self.cem_alpha*np.mean(elites, axis=1) +  (1-self.cem_alpha) * cem_mean
-                cem_std = self.cem_alpha*np.std(elites, axis=1) +  (1-self.cem_alpha) * cem_mean
-
-                # print(elites)
-
+                cem_mean = self.cem_alpha*np.mean(elites, axis=0) +  (1-self.cem_alpha) * cem_mean
+                cem_std = self.cem_alpha*np.std(elites, axis=0) +  (1-self.cem_alpha) * cem_std
                 # - Sample candidate sequences from a Gaussian with the current
                 #   elite mean and variance
                 #     (Hint: remember that for the first iteration, we instead sample
@@ -90,7 +84,7 @@ class MPCPolicy(BasePolicy):
 
             # TODO(Q5): Set `cem_action` to the appropriate action sequence chosen by CEM.
             # The shape should be (horizon, self.ac_dim)
-            cem_action = None
+            cem_action = np.mean(action_sequence, axis=1)
 
             return cem_action[None]
         else:
