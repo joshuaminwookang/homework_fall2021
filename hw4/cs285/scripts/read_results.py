@@ -21,7 +21,7 @@ def get_section_results(file):
 if __name__ == '__main__':
     import glob
 
-    search = 'submit/hw4_*reacher*/events*'
+    search = 'data/hw4_q5*random*/events*'
     logdir = os.path.normpath(os.path.join(os.getcwd(), search))
     eventfile = glob.glob(logdir)[0]
 

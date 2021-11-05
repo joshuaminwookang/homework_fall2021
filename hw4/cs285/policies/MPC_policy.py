@@ -66,17 +66,11 @@ class MPCPolicy(BasePolicy):
                 if i == 0 :
                     action_sequence = random_action_sequence
                 else :
-                    action_sequence = np.random.normal(cem_mean, cem_std, (num_sequences, horizon, self.ac_dim))
+                    action_sequence = np.random.normal(loc=cem_mean, scale=cem_std, size=(num_sequences, horizon, self.ac_dim))
                 summed_rewards = self.calculate_sum_of_rewards(obs, action_sequence, self.dyn_models[0])
                 elites = action_sequence[summed_rewards.argsort()[-self.cem_num_elites:][::-1]]
                 cem_mean = self.cem_alpha*np.mean(elites, axis=0) +  (1-self.cem_alpha) * cem_mean
                 cem_std = self.cem_alpha*np.std(elites, axis=0) +  (1-self.cem_alpha) * cem_std
-                # flatten_acs = np.reshape(action_sequence, (num_sequences*horizon, self.ac_dim))
-                # rewards = self.env.get_reward(np.tile(obs, (num_sequences*horizon,1)), flatten_acs)[0]
-                # summed_rewards = np.sum(np.reshape(rewards, (num_sequences, horizon)), axis=1)
-                # elites = action_sequence[summed_rewards.argsort()[-self.cem_num_elites:][::-1]]
-                # cem_mean = self.cem_alpha*np.mean(elites, axis=0) +  (1-self.cem_alpha) * cem_mean
-                # cem_std = self.cem_alpha*np.std(elites, axis=0) +  (1-self.cem_alpha) * cem_std
                 # - Sample candidate sequences from a Gaussian with the current
                 #   elite mean and variance
                 #     (Hint: remember that for the first iteration, we instead sample
@@ -88,8 +82,7 @@ class MPCPolicy(BasePolicy):
 
             # TODO(Q5): Set `cem_action` to the appropriate action sequence chosen by CEM.
             # The shape should be (horizon, self.ac_dim)
-            cem_action = np.mean(action_sequence, axis=1)
-
+            cem_action = np.mean(action_sequence, axis=0)
             return cem_action[None]
         else:
             raise Exception(f"Invalid sample_strategy: {self.sample_strategy}")
@@ -141,7 +134,7 @@ class MPCPolicy(BasePolicy):
         horizon = candidate_action_sequences.shape[1]
         #flattened_acs = np.reshape([candidate_action_sequences[:,t,:] for t in range(horizon)], (num_sequences*horizon, self.ac_dim))
         observation = np.tile(obs, (num_sequences, 1))
-        obs_list = [observation]
+        # obs_list = [observation]
         rewards = [self.env.get_reward(observation, candidate_action_sequences[:,0,:])[0]]
         for t in range(horizon-1):
             observation = model.get_prediction(observation, candidate_action_sequences[:,t,:], self.data_statistics)
