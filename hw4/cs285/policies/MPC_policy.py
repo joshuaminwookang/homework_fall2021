@@ -67,9 +67,7 @@ class MPCPolicy(BasePolicy):
                     action_sequence = random_action_sequence
                 else :
                     action_sequence = np.random.normal(loc=cem_mean, scale=cem_std, size=(num_sequences, horizon, self.ac_dim))
-                summed_rewards = self.calculate_sum_of_rewards(obs, action_sequence, self.dyn_models[0])
-                # print(np.argsort(summed_rewards)[-self.cem_num_elites:])
-                # print(action_sequence)
+                summed_rewards = self.evaluate_candidate_sequences(action_sequence, obs)
                 elites = action_sequence[np.argsort(summed_rewards)[-self.cem_num_elites:]]
                 cem_mean = self.cem_alpha*np.mean(elites, axis=0) +  (1-self.cem_alpha) * cem_mean
                 cem_std = self.cem_alpha*np.std(elites, axis=0) +  (1-self.cem_alpha) * cem_std
@@ -82,7 +80,6 @@ class MPCPolicy(BasePolicy):
                 #      our candidate sequences in order to rank them?)
                 # - Update the elite mean and variance
             
-            # assert(1==0)
             # TODO(Q5): Set `cem_action` to the appropriate action sequence chosen by CEM.
             # The shape should be (horizon, self.ac_dim)
             cem_action = cem_mean
