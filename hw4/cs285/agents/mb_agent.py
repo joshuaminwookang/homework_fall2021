@@ -51,6 +51,7 @@ class MBAgent(BaseAgent):
             # select which datapoints to use for this model of the ensemble
             # you might find the num_data_per_env variable defined above useful
             observations = ob_no[i*num_data_per_ens: (i+1)*num_data_per_ens,:]
+
             actions = ac_na[i*num_data_per_ens: (i+1)*num_data_per_ens,:]
             next_observations = next_ob_no[i*num_data_per_ens: (i+1)*num_data_per_ens,:]
 

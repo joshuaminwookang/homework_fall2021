@@ -114,6 +114,7 @@ class FFModel(nn.Module, BaseModel):
              - 'delta_std'
         :return: a numpy array of the predicted next-states (s_t+1)
         """
+        # print("Checking A obs_mean:{}".format(data_statistics['obs_mean']))
         prediction, _ = self(obs, acs, **data_statistics)# TODO(Q1) get numpy array of the predicted next-states (s_t+1)
         # Hint: `self(...)` returns a tuple, but you only need to use one of the
         # outputs.
