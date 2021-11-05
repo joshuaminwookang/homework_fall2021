@@ -136,32 +136,21 @@ class MPCPolicy(BasePolicy):
         :return: numpy array with the sum of rewards for each action sequence.
         The array should have shape [N].
         """
-        # for s in range(self.N):
-        #     this_action_seq = candidate_action_sequences[s]
-        #     sum_of_rewards.append(np.sum(self.env.get_reward(model.get_prediction(np.tile(obs,(self.horizon,1)), this_action_seq, self.data_statistics), this_action_seq)))
-        # flattened_acs = np.reshape(candidate_action_sequences, (self.N*self.horizon, self.ac_dim))
-        # predictions = model.get_prediction(np.tile(obs,(self.N*self.horizon,1)), flattened_acs, self.data_statistics)
-        # predictions = model.get_prediction(np.tile(obs,(self.N*self.horizon,1)), flattened_acs, self.data_statistics)
-        # rewards = self.env.get_reward(predictions, flattened_acs)[0]
 
         num_sequences = candidate_action_sequences.shape[0]
         horizon = candidate_action_sequences.shape[1]
-        flattened_acs = np.reshape([candidate_action_sequences[:,t,:] for t in range(horizon)], (num_sequences*horizon, self.ac_dim))
+        #flattened_acs = np.reshape([candidate_action_sequences[:,t,:] for t in range(horizon)], (num_sequences*horizon, self.ac_dim))
         observation = np.tile(obs, (num_sequences, 1))
         obs_list = [observation]
-        # observation = np.tile(obs, (num_sequences, 1))
-        # rewards = [self.env.get_reward(observation, candidate_action_sequences[:,0,:])[0]]
-        # for t in range(horizon-1):
-        #     observation = model.get_prediction(observation, candidate_action_sequences[:,t,:], self.data_statistics)
-        #     # obs_list.append(observation)
-        #     rewards.append(self.env.get_reward(observation, candidate_action_sequences[:,t+1,:])[0])
-        
+        rewards = [self.env.get_reward(observation, candidate_action_sequences[:,0,:])[0]]
         for t in range(horizon-1):
-            obs_list.append(model.get_prediction(observation, candidate_action_sequences[:,t,:], self.data_statistics))
+            observation = model.get_prediction(observation, candidate_action_sequences[:,t,:], self.data_statistics)
+            # obs_list.append(observation)
+            rewards.append(self.env.get_reward(observation, candidate_action_sequences[:,t+1,:])[0])
          
-        new_rewards = self.env.get_reward(np.reshape(obs_list, (num_sequences*horizon, self.ob_dim)), flattened_acs)[0]
-        sum_of_rewards = np.sum(np.reshape(new_rewards, (horizon, num_sequences)), axis=0)
-        # sum_of_rewards = np.sum(rewards, axis=0)
+        # new_rewards = self.env.get_reward(np.reshape(obs_list, (num_sequences*horizon, self.ob_dim)), flattened_acs)[0]
+        #sum_of_rewards = np.sum(np.reshape(new_rewards, (horizon, num_sequences)), axis=0)
+        sum_of_rewards = np.sum(rewards, axis=0)
         #sum_of_rewards = np.sum(np.reshape(rewards, (self.N, self.horizon)), axis=1)  # TODO (Q2)
 
         # For each candidate action sequence, predict a sequence of
