@@ -85,7 +85,6 @@ class MPCPolicy(BasePolicy):
                 #     (Hint: what existing function can we use to compute rewards for
                 #      our candidate sequences in order to rank them?)
                 # - Update the elite mean and variance
-                pass
 
             # TODO(Q5): Set `cem_action` to the appropriate action sequence chosen by CEM.
             # The shape should be (horizon, self.ac_dim)
@@ -158,7 +157,6 @@ class MPCPolicy(BasePolicy):
         #     rewards.append(self.env.get_reward(observation, candidate_action_sequences[:,t+1,:])[0])
         
         for t in range(horizon-1):
-            observation = model.get_prediction(observation, candidate_action_sequences[:,t,:], self.data_statistics)
             obs_list.append(model.get_prediction(observation, candidate_action_sequences[:,t,:], self.data_statistics))
          
         new_rewards = self.env.get_reward(np.reshape(obs_list, (num_sequences*horizon, self.ob_dim)), flattened_acs)[0]
