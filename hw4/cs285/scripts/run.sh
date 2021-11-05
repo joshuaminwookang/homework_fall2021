@@ -76,18 +76,18 @@ elif [[ $EXP_NUM == 5 ]]; then
     # --add_sl_noise --num_agent_train_steps_per_iter 20 --n_iter 12 \
     # --batch_size_initial 5000 --batch_size 1000 --mpc_horizon 10 \
     # --mpc_action_sampling_strategy 'cem' --cem_iterations 2 --video_log_freq -1 --seed 3
-    python cs285/scripts/run_hw4_mb.py --exp_name debug --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
-     --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
-     --mpc_action_sampling_strategy 'cem' --cem_iterations 2 --video_log_freq -1 
+    # python cs285/scripts/run_hw4_mb.py --exp_name debug --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
+    #  --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
+    #  --mpc_action_sampling_strategy 'cem' --cem_iterations 2 --video_log_freq -1 
     # python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_random --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
     #  --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
     #  --mpc_action_sampling_strategy 'random' --video_log_freq -1 
     # python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_cem_2 --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
     #  --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
     #  --mpc_action_sampling_strategy 'cem' --cem_iterations 2 --video_log_freq -1 
-    # python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_cem_4 --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
-    #  --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
-    #  --mpc_action_sampling_strategy 'cem' --cem_iterations 4 --video_log_freq -1 
+    python cs285/scripts/run_hw4_mb.py --exp_name q5_cheetah_cem_4 --env_name 'cheetah-cs285-v0' --mpc_horizon 15 \
+     --add_sl_noise --num_agent_train_steps_per_iter 1500 --batch_size_initial 5000 --batch_size 5000 --n_iter 5 \
+     --mpc_action_sampling_strategy 'cem' --cem_iterations 4 --video_log_freq -1 
 else
     echo "Nothing to be done"
 fi
