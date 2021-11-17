@@ -30,8 +30,9 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
         return np.sqrt(2* np.log(np.tile(self.n, len(obs_count))) / obs_count)
 
     def update(self, ob_no):
-        self.counts[self.count_obs(ob_no)] += 1
+        self.histogram[self.discretize_obs(ob_no)] += 1
         return 0
 
     def discretize_obs(self, ob_no):
+        print(ob_no)
         return np.floor(ob_no).astype(int)
