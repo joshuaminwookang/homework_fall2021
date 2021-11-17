@@ -24,6 +24,8 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
         return ptu.from_numpy(self.forward_np(ptu.to_numpy(ob_no)))
 
     def forward_np(self, ob_no):
+        print(ob_no.shape())
+        print(self.histogram[self.discretize_obs(ob_no)])
         obs_count = self.histogram[self.discretize_obs(ob_no)] + 1
         self.n += len(obs_count)
         # UCB reward bonus
@@ -34,5 +36,4 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
         return 0
 
     def discretize_obs(self, ob_no):
-        print(ob_no)
         return np.floor(ob_no).astype(int)
