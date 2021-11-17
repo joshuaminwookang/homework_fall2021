@@ -47,10 +47,10 @@ elif [[ $EXP_NUM == 3 ]]; then
     --num_exploration_steps=15000 --offline_exploitation --cql_alpha=0 \
     --unsupervised_exploration --exp_name q2_dqn_numsteps_15000
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
-    --unsupervised_exploration --offline_exploitation --cql_alpha=0.02
+    --unsupervised_exploration --offline_exploitation --cql_alpha=0.02 \
     --exp_name q2_alpha_0.02
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
-    --unsupervised_exploration --offline_exploitation --cql_alpha=0.5
+    --unsupervised_exploration --offline_exploitation --cql_alpha=0.5 \
     --exp_name q2_alpha_0.5
 elif [[ $EXP_NUM == 4 ]]; then
     echo "Experiment 3: Supevised Exploration with Mixed Reward Bonus"

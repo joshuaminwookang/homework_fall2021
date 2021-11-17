@@ -29,7 +29,6 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
     def forward_np(self, ob_no):
         obs_count = np.array(self.lookup_histogram(ob_no)) +1
         self.n += len(obs_count)
-        self.update(ob_no)
         ucb_bonus = np.sqrt(2* np.log(np.tile(self.n, len(obs_count))) / obs_count)
         # UCB reward bonus
         return ucb_bonus
