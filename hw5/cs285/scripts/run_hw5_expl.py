@@ -74,6 +74,7 @@ def main():
     parser.add_argument('--save_params', action='store_true')
 
     parser.add_argument('--use_boltzmann', action='store_true')
+    parser.add_argument('--use_count_model',action='store_true')
 
     args = parser.parse_args()
 

@@ -3,60 +3,35 @@ from .base_exploration_model import BaseExplorationModel
 import torch.optim as optim
 from torch import nn
 import torch
-
-# def init_method_1(model):
-#     model.weight.data.uniform_()
-#     model.bias.data.uniform_()
-
-# def init_method_2(model):
-#     model.weight.data.normal_()
-#     model.bias.data.normal_()
-
+import numpy as np
 
 class PseudoCountModel(nn.Module, BaseExplorationModel):
-    def __init__(self, hparams, optimizer_spec, **kwargs):
+    def __init__(self, hparams, optimizer_spec, env, **kwargs):
         super().__init__(**kwargs)
         self.ob_dim = hparams['ob_dim']
-        self.output_size = hparams['rnd_output_size']
-        self.n_layers = hparams['rnd_n_layers']
-        self.size = hparams['rnd_size']
-        self.optimizer_spec = optimizer_spec
+        self.env = env
+        self.histogram = np.zeros(self.env.observation_space.high.astype(int), self.env.observation_space.low.astype(int))
+        self.n = 0
 
-        self.f = ptu.build_mlp(self.ob_dim, self.output_size, self.n_layers, self.size, init_method=init_method_1)
-        self.f_hat = ptu.build_mlp(self.ob_dim, self.output_size, self.n_layers, self.size, init_method=init_method_2)
-        
-        self.optimizer = self.optimizer_spec.constructor(
-            self.f_hat.parameters(),
-            **self.optimizer_spec.optim_kwargs
-        )
-        self.learning_rate_scheduler = optim.lr_scheduler.LambdaLR(
-            self.optimizer,
-            self.optimizer_spec.learning_rate_schedule,
-        )
-
-        self.f.to(ptu.device)
-        self.f_hat.to(ptu.device)
+        # Because the Pointmass library has 2D floating point obs space
+        # Discretize the counting
+        # self.observation_space = gym.spaces.Box(
+        # low=np.array([0,0]),
+        # high=np.array([self._height, self._width]),
+        # dtype=np.float32)
 
     def forward(self, ob_no):
-        # <DONE>: Get the prediction error for ob_no
-        # HINT: Remember to detach the output of self.f!
-        targets = self.f(ob_no).detach()
-        predictions = self.f_hat(ob_no)
-        return torch.norm(predictions - targets, dim=1)
+        return ptu.from_numpy(self.forward_np(ptu.to_numpy(ob_no)))
 
     def forward_np(self, ob_no):
-        ob_no = ptu.from_numpy(ob_no)
-        error = self(ob_no)
-        return ptu.to_numpy(error)
+        obs_count = self.histogram[self.discretize_obs(ob_no)] + 1
+        self.n += len(obs_count)
+        # UCB reward bonus
+        return np.sqrt(2* np.log(np.tile(self.n, len(obs_count))) / obs_count)
 
     def update(self, ob_no):
-        # <DONE>: Update f_hat using ob_no
-        # Hint: Take the mean prediction error across the batch
-        prediction_errors = self(ptu.from_numpy(ob_no))
-        loss = torch.mean(prediction_errors)
+        self.counts[self.count_obs(ob_no)] += 1
+        return 0
 
-        self.optimizer.zero_grad()
-        loss.backward()
-        self.optimizer.step()
-
-        return loss.item()
+    def discretize_obs(self, ob_no):
+        return np.floor(ob_no).astype(int)

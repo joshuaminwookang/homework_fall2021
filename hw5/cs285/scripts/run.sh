@@ -20,9 +20,9 @@ if [[ $EXP_NUM == 0 ]]; then
 elif [[ $EXP_NUM == 1 ]]; then
     echo "Experiment 1-2: custom (count) exploration "
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
-    --unsupervised_exploration <add arguments for your method> --exp_name q1_alg_med
-    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
-    --unsupervised_exploration <add arguments for your method> --exp_name q1_alg_med
+    --unsupervised_exploration --use_count_model --exp_name q1_alg_med
+    # python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
+    # --unsupervised_exploration --use_count_model  --exp_name q1_alg_med
 elif [[ $EXP_NUM == 2 ]]; then
     echo "Experiment 2-1: Offline Learning with CQL vs DQN"
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --exp_name q2_dqn \
