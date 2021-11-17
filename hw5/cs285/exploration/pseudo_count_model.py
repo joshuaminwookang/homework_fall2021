@@ -27,15 +27,15 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
         return ptu.from_numpy(self.forward_np(ptu.to_numpy(ob_no)))
 
     def forward_np(self, ob_no):
-        print(self.lookup_histogram(ob_no))
         obs_count = np.array(self.lookup_histogram(ob_no)) +1
         self.n += len(obs_count)
+        self.update(ob_no)
         ucb_bonus = np.sqrt(2* np.log(np.tile(self.n, len(obs_count))) / obs_count)
         # UCB reward bonus
         return ucb_bonus
 
     def update(self, ob_no):
-        print("update!")
-        for ob in ob_no:
+        discretized_obs = np.floor(ob_no).astype(int)
+        for ob in discretized_obs:
           self.histogram[(ob[0], ob[1])] += 1
         return 0
