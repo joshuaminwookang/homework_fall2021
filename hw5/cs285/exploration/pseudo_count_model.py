@@ -19,21 +19,23 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
         # low=np.array([0,0]),
         # high=np.array([self._height, self._width]),
         # dtype=np.float32)
+    def lookup_histogram(self, ob_no):
+        discretized_obs = np.floor(ob_no).astype(int)
+        return [self.histogram[(ob[0], ob[1])] for ob in discretized_obs]
 
     def forward(self, ob_no):
         return ptu.from_numpy(self.forward_np(ptu.to_numpy(ob_no)))
 
     def forward_np(self, ob_no):
-        print(ob_no.shape())
-        print(self.histogram[self.discretize_obs(ob_no)])
-        obs_count = self.histogram[self.discretize_obs(ob_no)] + 1
+        print(self.lookup_histogram(ob_no))
+        obs_count = np.array(self.lookup_histogram(ob_no)) +1
         self.n += len(obs_count)
+        ucb_bonus = np.sqrt(2* np.log(np.tile(self.n, len(obs_count))) / obs_count)
         # UCB reward bonus
-        return np.sqrt(2* np.log(np.tile(self.n, len(obs_count))) / obs_count)
+        return ucb_bonus
 
     def update(self, ob_no):
-        self.histogram[self.discretize_obs(ob_no)] += 1
+        print("update!")
+        for ob in ob_no:
+          self.histogram[(ob[0], ob[1])] += 1
         return 0
-
-    def discretize_obs(self, ob_no):
-        return np.floor(ob_no).astype(int)
