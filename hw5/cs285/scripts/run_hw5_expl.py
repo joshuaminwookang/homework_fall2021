@@ -54,6 +54,7 @@ def main():
 
     parser.add_argument('--use_rnd', action='store_true')
     parser.add_argument('--num_exploration_steps', type=int, default=10000)
+    parser.add_argument('--num_timesteps', type=int, default=50000)
     parser.add_argument('--unsupervised_exploration', action='store_true')
 
     parser.add_argument('--offline_exploitation', action='store_true')
@@ -83,7 +84,7 @@ def main():
     params['num_critic_updates_per_agent_update'] = 1
     params['exploit_weight_schedule'] = ConstantSchedule(1.0)
     params['video_log_freq'] = -1 # This param is not used for DQN
-    params['num_timesteps'] = 50000
+    # params['num_timesteps'] = 50000
     params['learning_starts'] = 2000
     params['eps'] = 0.2
     ##################################

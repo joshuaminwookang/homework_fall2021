@@ -10,13 +10,13 @@ cd $SCRIPT_DIR/../../
 if [[ $EXP_NUM == 0 ]]; then
     echo "Experiment 1-1: RND vs random exploration  "
     python cs285/scripts/run_hw5_expl.py --env_name PointmassEasy-v0 --use_rnd \
-    --unsupervised_exploration --exp_name q1_easy_rnd
+    --unsupervised_exploration --exp_name q1_easy_rnd --num_timesteps 20000
     python cs285/scripts/run_hw5_expl.py --env_name PointmassEasy-v0 \
-    --unsupervised_exploration --exp_name q1_easy_random
+    --unsupervised_exploration --exp_name q1_easy_random --num_timesteps 20000
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
-    --unsupervised_exploration --exp_name q1_medium_rnd
+    --unsupervised_exploration --exp_name q1_medium_rnd --num_timesteps 20000
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
-    --unsupervised_exploration --exp_name q1_medium_random
+    --unsupervised_exploration --exp_name q1_medium_random --num_timesteps 20000
 elif [[ $EXP_NUM == 1 ]]; then
     echo "Experiment 1-2: custom (count) exploration "
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
