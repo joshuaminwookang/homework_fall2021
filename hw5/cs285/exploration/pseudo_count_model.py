@@ -10,6 +10,8 @@ class PseudoCountModel(nn.Module, BaseExplorationModel):
         super().__init__(**kwargs)
         self.ob_dim = hparams['ob_dim']
         self.env = env
+        print(self.env.observation_space.high)
+        print(self.env.observation_space.low)
         self.histogram = np.zeros(self.env.observation_space.high.astype(int), self.env.observation_space.low.astype(int))
         self.n = 0
 
