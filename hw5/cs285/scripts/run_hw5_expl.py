@@ -101,7 +101,7 @@ def main():
     if params['env_name']=='PointmassVeryHard-v0':
         params['ep_len']=200
     
-    if params['use_rnd']:
+    if params['use_rnd'] or params['use_count_model']:
         params['explore_weight_schedule'] = PiecewiseSchedule([(0,1), (params['num_exploration_steps'], 0)], outside_value=0.0)
     else:
         params['explore_weight_schedule'] = ConstantSchedule(0.0)
@@ -110,7 +110,7 @@ def main():
         params['explore_weight_schedule'] = ConstantSchedule(1.0)
         params['exploit_weight_schedule'] = ConstantSchedule(0.0)
         
-        if not params['use_rnd']:
+        if not params['use_rnd'] or params['use_count_model']:
             params['learning_starts'] = params['num_exploration_steps']
     
 
