@@ -7,62 +7,67 @@ SOURCE_DQN="cs285/scripts/run_hw3_dqn.py"
 SOURCE_AC="cs285/scripts/run_hw3_actor_critic.py"
 
 cd $SCRIPT_DIR/../../
-if [[ $EXP_NUM == 1 ]]; then
-    echo "Experiment 1: RND vs random exploration  "
+if [[ $EXP_NUM == 0 ]]; then
+    echo "Experiment 1-1: RND vs random exploration  "
     python cs285/scripts/run_hw5_expl.py --env_name PointmassEasy-v0 --use_rnd \
-    --unsupervised_exploration --exp_name q1_env1_rnd
+    --unsupervised_exploration --exp_name q1_easy_rnd
     python cs285/scripts/run_hw5_expl.py --env_name PointmassEasy-v0 \
-    --unsupervised_exploration --exp_name q1_env1_random
+    --unsupervised_exploration --exp_name q1_easy_random
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
-    --unsupervised_exploration --exp_name q1_env2_rnd
+    --unsupervised_exploration --exp_name q1_medium_rnd
     python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
-    --unsupervised_exploration --exp_name q1_env2_random
+    --unsupervised_exploration --exp_name q1_medium_random
+elif [[ $EXP_NUM == 1 ]]; then
+    echo "Experiment 1-2: custom (count) exploration "
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
+    --unsupervised_exploration <add arguments for your method> --exp_name q1_alg_med
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 \
+    --unsupervised_exploration <add arguments for your method> --exp_name q1_alg_med
 elif [[ $EXP_NUM == 2 ]]; then
-    echo "Experiment 2: MBRL with Trained MPC Policy"
-    python cs285/scripts/run_hw4_mb.py --exp_name q2_obstacles_singleiteration --env_name obstacles-cs285-v0 \
-    --add_sl_noise --num_agent_train_steps_per_iter 20 --n_iter 1 \
-    --batch_size_initial 5000 --batch_size 1000 --mpc_horizon 10 \
-    --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    echo "Experiment 2-1: Offline Learning with CQL vs DQN"
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --exp_name q2_dqn \
+        --use_rnd --unsupervised_exploration --offline_exploitation --cql_alpha=0
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --exp_name q2_cql \
+        --use_rnd --unsupervised_exploration --offline_exploitation --cql_alpha=0.1
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --exp_name q2_expl_re_transform \
+        --use_rnd --unsupervised_exploration --offline_exploitation --cql_alpha=0.1 \
+        --exploit_rew_shift=1.0 --exploit_rew_scale=100.0
 elif [[ $EXP_NUM == 3 ]]; then
-    echo "Experiment 3: MBRL with Trained MPC Policy--Longer"
-    python cs285/scripts/run_hw4_mb.py --exp_name q3_obstacles --env_name obstacles-cs285-v0 \
-    --add_sl_noise --num_agent_train_steps_per_iter 20 --n_iter 12 \
-    --batch_size_initial 5000 --batch_size 1000 --mpc_horizon 10 \
-    --mpc_action_sampling_strategy 'random' --video_log_freq -1 --seed 3
-    python cs285/scripts/run_hw4_mb.py --exp_name q3_reacher --env_name reacher-cs285-v0 \
-    --add_sl_noise --num_agent_train_steps_per_iter 1000 --n_iter 15 \
-    --batch_size_initial 5000 --batch_size 5000 --mpc_horizon 10 \
-    --mpc_action_sampling_strategy 'random' --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name  q3_cheetah --env_name cheetah-cs285-v0 \
-    --add_sl_noise --num_agent_train_steps_per_iter 1500 --n_iter 20 \
-    --batch_size_initial 5000 --batch_size 5000 --mpc_horizon 15 \
-    --mpc_action_sampling_strategy 'random' --video_log_freq -1 
+    echo "Experiment 2-2,3: Ablation study; exploration data size and cql_alpha"
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=5000 --offline_exploitation --cql_alpha=0.1 \
+    --unsupervised_exploration --exp_name q2_cql_numsteps_5000
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=15000 --offline_exploitation --cql_alpha=0.1 \
+    --unsupervised_exploration --exp_name q2_cql_numsteps_15000
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=5000 --offline_exploitation --cql_alpha=0 \
+    --unsupervised_exploration --exp_name q2_dqn_numsteps_5000
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=15000 --offline_exploitation --cql_alpha=0 \
+    --unsupervised_exploration --exp_name q2_dqn_numsteps_15000
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --unsupervised_exploration --offline_exploitation --cql_alpha=0.02
+    --exp_name q2_alpha_0.02
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --unsupervised_exploration --offline_exploitation --cql_alpha=0.5
+    --exp_name q2_alpha_0.5
 elif [[ $EXP_NUM == 4 ]]; then
-    echo "Experiment 4: MBRL with Trained MPC Policy Variables"
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_horizon5 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 5 --num_agent_train_steps_per_iter 1000 \
-    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_horizon15 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 15 --num_agent_train_steps_per_iter 1000 \
-    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_horizon30 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 30 --num_agent_train_steps_per_iter 1000 \
-    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_numseq100 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 --video_log_freq -1 \
-    --batch_size 800 --n_iter 15 --mpc_num_action_sequences 100 --mpc_action_sampling_strategy 'random'
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_numseq1000 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 --video_log_freq -1 \
-    --batch_size 800 --n_iter 15 --mpc_num_action_sequences 1000 --mpc_action_sampling_strategy 'random'
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_ensemble1 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 --video_log_freq -1 \
-    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 1 --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_ensemble3 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 \
-    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 3 --video_log_freq -1 
-    python cs285/scripts/run_hw4_mb.py --exp_name q4_reacher_ensemble5 --env_name reacher-cs285-v0 \
-    --add_sl_noise --mpc_horizon 10 --num_agent_train_steps_per_iter 1000 \
-    --batch_size 800 --n_iter 15 --mpc_action_sampling_strategy 'random' --ensemble_size 5 --video_log_freq -1 
+    echo "Experiment 3: Supevised Exploration with Mixed Reward Bonus"
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=20000 --cql_alpha=0.0 --exp_name q3_medium_dqn
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=20000 --cql_alpha=1.0 --exp_name q3_medium_cql
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassMedium-v0 --use_rnd \
+    --num_exploration_steps=20000 --cql_alpha=1.0 --exp_name q3_medium_cql_transform_re \
+    --exploit_rew_shift=1.0 --exploit_rew_scale=100.0
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassHard-v0 --use_rnd \
+    --num_exploration_steps=20000 --cql_alpha=0.0 --exp_name q3_hard_dqn
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassHard-v0 --use_rnd \
+    --num_exploration_steps=20000 --cql_alpha=1.0 --exp_name q3_hard_cql
+    python cs285/scripts/run_hw5_expl.py --env_name PointmassHard-v0 --use_rnd \
+    --num_exploration_steps=20000 --cql_alpha=1.0 --exp_name q3_hard_cql_transform_re \
+    --exploit_rew_shift=1.0 --exploit_rew_scale=100.0
 elif [[ $EXP_NUM == 5 ]]; then
     echo "Experiment 5: CEM on Cheetah"
     # python cs285/scripts/run_hw4_mb.py --exp_name debug --env_name obstacles-cs285-v0 \
