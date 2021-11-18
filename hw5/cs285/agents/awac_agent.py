@@ -124,8 +124,7 @@ class AWACAgent(DQNAgent):
             # 1): Estimate the advantage
             # 2): Calculate the awac actor loss
             adv_estimate = self.estimate_advantage(ob_no, ac_na, re_n, next_ob_no, terminal_n)
-            actor_loss = adv_estimate
-            assert(1==0)
+            actor_loss = self.awac_actor.update(ob_no, ac_na, adv_estimate)
 
             # TODO: Update Target Networks #
             if self.num_param_updates % self.target_update_freq == 0:

@@ -171,6 +171,12 @@ class MLPPolicyAWAC(MLPPolicy):
 
         # TODO update the policy network utilizing AWAC update
 
-        actor_loss = None
+        action_distribution = self(observations)
+        actor_loss = - action_distribution.log_prob(actions) * torch.exp(adv_n *1/self.lambda_awac)
+        actor_loss = actor_loss.mean()
+
+        self.optimizer.zero_grad()
+        actor_loss.backward()
+        self.optimizer.step()
         
         return actor_loss.item()
