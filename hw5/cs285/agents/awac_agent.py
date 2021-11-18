@@ -51,31 +51,26 @@ class AWACAgent(DQNAgent):
 
     def get_qvals(self, critic, obs, action):
         # get q-value for a given critic, obs, and action
-        qa_vals = critic.qa_values(obs)
-        print(qa_vals)
-        q_vals = qa_vals[action]
-        print(q_vals)
-        return q_vals
+        return torch.gather(critic.q_net(obs), 1, action.unsqueeze(1)).squeeze(1)
 
     def estimate_advantage(self, ob_no, ac_na, re_n, next_ob_no, terminal_n, n_actions=10):
         # TODO convert to torch tensors
-        # ob_no_tensor = ptu.from_numpy(ob_no)
-        # ac_na = ptu.from_numpy(ac_na)
-        # re_n = ptu.from_numpy(re_n)
-        # next_ob_no = ptu.from_numpy(next_ob_no)
-        # terminal_n = ptu.from_numpy(terminal_n)
+        dist = self.actor.get_action(ob_no)
+        ob_no = ptu.from_numpy(ob_no)
+        ac_na = ptu.from_numpy(ac_na).to(torch.long)
+        re_n = ptu.from_numpy(re_n)
+        next_ob_no = ptu.from_numpy(next_ob_no)
+        terminal_n = ptu.from_numpy(terminal_n)
         vals = []
+
         # TODO Calculate Value Function Estimate given current observation
         # You may find it helpful to utilze get_qvals defined above
-        dist = self.actor.get_action(ob_no)
-        print("dist")
-        print(dist)
         if self.agent_params['discrete']:
             # for i in range(self.agent_params['ac_dim']):
-            vals = self.get_qvals(self.exploration_critic, ob_no, dist) 
+            vals = self.get_qvals(self.exploration_critic, ob_no, ptu.from_numpy(dist)) 
         else:
-            for _ in range(n_actions):
-                vals.append(self.get_qvals(self.exploration_critic, ob_no, dist))
+            print("not implemented")
+            return
         print("vals")
         print(vals)
         print(vals.shape)
