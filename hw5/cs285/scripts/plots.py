@@ -44,7 +44,8 @@ def load_data_from_dir(search):
         Y = []
         columns = [] 
         filename=os.path.dirname(f)
-        tag=filename[filename.find('/hw4_') + 1:filename.find('-v')]
+        tag=filename[filename.find('/hw5_expl_') + 10:filename.find('-v0')]
+        print(tag)
         X, Y = get_section_results(f)
         columns = ["Train_AverageReturn", "Eval_AverageReturn" ]
         data = pd.DataFrame([ [x,y] for x,y in zip(X, Y)], columns = columns)
@@ -74,8 +75,8 @@ def plot_stacked_learning_curves(dfs, vars, title, plot_type="scatter", subtitle
             ax = sns.lineplot(data=total_df)
         ax.set_xlabel(vars[0], fontsize=axis_label, weight='bold')
         ax.set_ylabel(vars[1], fontsize=axis_label, weight='bold')
-        plt.xlim([-1,1])
-        plt.ylim(dfs[0].iloc[0][vars[1]]*1.1, dfs[0].iloc[0][vars[1]]*0.9)
+        # plt.xlim([-1,1])
+        # plt.ylim(dfs[0].iloc[0][vars[1]]*1.1, dfs[0].iloc[0][vars[1]]*0.9)
         ax.ticklabel_format(axis="x", style="plain")
         ax.ticklabel_format(axis="y", style="plain")
         plt.legend(fontsize=legend_label,loc="best", prop={'weight': 'bold'})
@@ -90,9 +91,14 @@ main function
 def main():
     if not os.path.exists(DIR):
         os.mkdir(DIR)
-    dfs_q2 = load_data_from_dir("data/hw4_q2_*/event*")
-    plot_stacked_learning_curves(dfs_q2, ['Iteration', 'Train_AverageReturn'], "Q2_Obstacles_TrainAvg", plot_type="scatter")
-    plot_stacked_learning_curves(dfs_q2, ['Iteration', 'Eval_AverageReturn'], "Q2_Obstacles_EvalAvg", plot_type="scatter")
+    dfs_q1_easy = load_data_from_dir("data/hw5_expl_q1_easy*/event*")
+    plot_stacked_learning_curves(dfs_q1_easy, ['Iteration', 'Train_AverageReturn'], "Q1_RNDvsRandom_TrainAvg_Easy", plot_type="scatter")
+    dfs_q1_medium = load_data_from_dir("data/hw5_expl_q1_medium*/event*")
+    plot_stacked_learning_curves(dfs_q1_medium, ['Iteration', 'Train_AverageReturn'], "Q1_RNDvsRandom_TrainAvg_Medium", plot_type="scatter")
+    dfs_q1_count_based = load_data_from_dir("data/hw5_expl_q1_alg*/event*")
+    plot_stacked_learning_curves(dfs_q1_count_based, ['Iteration', 'Train_AverageReturn'], "Q1_RNDvsRandom_TrainAvg_Medium", plot_type="scatter")
+    
+    # plot_stacked_learning_curves(dfs_q1_easy, ['Iteration', 'Eval_AverageReturn'], "Q1_RNDvsRandom_EvalAvg", plot_type="scatter")
 
     # dfs_q3 = load_data_from_dir("data/hw4_q3_*/event*")
     # plot_stacked_learning_curves(dfs_q3, ['Iteration', 'Eval_AverageReturn'], "Q3_MBRL_Random_Shooting", plot_type="line")

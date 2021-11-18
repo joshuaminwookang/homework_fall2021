@@ -73,6 +73,30 @@ elif [[ $EXP_NUM == 5 ]]; then
     python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
     --exp_name q5_awac_medium_unsupervised_lam_1 --use_rnd \
     --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
+    --exp_name q5_awac_medium_unsupervised_lam_10 --use_rnd \
+    --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
+    --exp_name q5_awac_medium_unsupervised_lam_50 --use_rnd \
+    --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
+    --exp_name q5_awac_medium_supervised_lam_1 --use_rnd \
+    --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
+    --exp_name q5_awac_medium_supervised_lam_10 --use_rnd \
+    --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassEasy-v0 \
+    --exp_name q5_awac_easy_unsupervised_lam_1 --use_rnd \
+    --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassEasy-v0 \
+    --exp_name q5_awac_easy_unsupervised_lam_10 --use_rnd \
+    --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassEasy-v0 \
+    --exp_name q5_awac_easy_supervised_lam_1 --use_rnd \
+    --awac_lambda=1 --num_exploration_steps=20000
+    python cs285/scripts/run_hw5_awac.py --env_name PointmassEasy-v0 \
+    --exp_name q5_awac_easy_supervised_lam_10 --use_rnd \
+    --awac_lambda=1 --num_exploration_steps=20000
 else
     echo "Nothing to be done"
 fi
