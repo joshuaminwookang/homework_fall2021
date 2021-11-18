@@ -60,7 +60,8 @@ class AWACAgent(DQNAgent):
         # re_n = ptu.from_numpy(re_n)
         # next_ob_no = ptu.from_numpy(next_ob_no)
         # terminal_n = ptu.from_numpy(terminal_n)
-
+        print(ac_na)
+        print(ac_na.shape)
         vals = []
         # TODO Calculate Value Function Estimate given current observation
         # You may find it helpful to utilze get_qvals defined above
