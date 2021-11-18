@@ -71,8 +71,8 @@ elif [[ $EXP_NUM == 4 ]]; then
 elif [[ $EXP_NUM == 5 ]]; then
     echo "Experiment 5: AWAC"
     python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
-    --exp_name q5_awac_medium_unsupervised_lam_0.1 --use_rnd \
-    --unsupervised_exploration --awac_lambda=0.1 --num_exploration_steps=10
+    --exp_name q5_awac_medium_unsupervised_lam_1 --use_rnd \
+    --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
 else
     echo "Nothing to be done"
 fi
