@@ -71,15 +71,11 @@ class AWACAgent(DQNAgent):
         else:
             print("not implemented")
             return
-        print("vals")
-        print(vals)
-        print(vals.shape)
         v_pi = vals
 
         # TODO Calculate Q-Values
         q_vals = self.get_qvals(self.exploration_critic, ob_no, ac_na)
         # TODO Calculate the Advantage       
-        assert(1==0) 
         return q_vals - v_pi
 
     def train(self, ob_no, ac_na, re_n, next_ob_no, terminal_n):
@@ -129,6 +125,7 @@ class AWACAgent(DQNAgent):
             # 2): Calculate the awac actor loss
             adv_estimate = self.estimate_advantage(ob_no, ac_na, re_n, next_ob_no, terminal_n)
             actor_loss = adv_estimate
+            assert(1==0)
 
             # TODO: Update Target Networks #
             if self.num_param_updates % self.target_update_freq == 0:
