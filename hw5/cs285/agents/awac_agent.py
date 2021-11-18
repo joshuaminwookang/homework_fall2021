@@ -67,7 +67,7 @@ class AWACAgent(DQNAgent):
         # You may find it helpful to utilze get_qvals defined above
         if self.agent_params['discrete']:
             # for i in range(self.agent_params['ac_dim']):
-            vals = self.get_qvals(self.exploration_critic, ob_no, ptu.from_numpy(dist)) 
+            vals = self.get_qvals(self.exploration_critic, ob_no, ptu.from_numpy(dist).to(torch.long)) 
         else:
             print("not implemented")
             return
