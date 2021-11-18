@@ -70,9 +70,9 @@ elif [[ $EXP_NUM == 4 ]]; then
     --exploit_rew_shift=1.0 --exploit_rew_scale=100.0
 elif [[ $EXP_NUM == 5 ]]; then
     echo "Experiment 5: AWAC"
-    python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
-    --exp_name q5_awac_medium_unsupervised_lam_1 --use_rnd \
-    --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
+    # python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
+    # --exp_name q5_awac_medium_unsupervised_lam_1 --use_rnd \
+    # --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
     python cs285/scripts/run_hw5_awac.py --env_name PointmassMedium-v0 \
     --exp_name q5_awac_medium_unsupervised_lam_10 --use_rnd \
     --unsupervised_exploration --awac_lambda=1 --num_exploration_steps=20000
