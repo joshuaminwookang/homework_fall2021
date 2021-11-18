@@ -63,6 +63,7 @@ class AWACAgent(DQNAgent):
         print(ac_na)
         print(ac_na.shape)
         print(self.exploration_critic.qa_values(ob_no))
+        print(self.exploration_critic.qa_values(ob_no).shape)
         vals = []
         # TODO Calculate Value Function Estimate given current observation
         # You may find it helpful to utilze get_qvals defined above
