@@ -69,17 +69,17 @@ class AWACAgent(DQNAgent):
         print(dist)
         if self.agent_params['discrete']:
             # for i in range(self.agent_params['ac_dim']):
-            vals = self.get_qvals(ob_no, dist) 
+            vals = self.get_qvals(self.exploration_critic, ob_no, dist) 
         else:
             for _ in range(n_actions):
-                vals.append(self.get_qvals(ob_no, dist))
+                vals.append(self.get_qvals(self.exploration_critic, ob_no, dist))
         print("vals")
         print(vals)
         print(vals.shape)
         v_pi = vals
 
         # TODO Calculate Q-Values
-        q_vals = self.get_qvals(ob_no, ac_na)
+        q_vals = self.get_qvals(self.exploration_critic, ob_no, ac_na)
         # TODO Calculate the Advantage       
         assert(1==0) 
         return q_vals - v_pi
