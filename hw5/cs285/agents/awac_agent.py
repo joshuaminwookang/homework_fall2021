@@ -76,7 +76,7 @@ class AWACAgent(DQNAgent):
         print("vals")
         print(vals)
         print(vals.shape)
-        v_pi = vals.mean()
+        v_pi = vals
 
         # TODO Calculate Q-Values
         q_vals = self.get_qvals(ob_no, ac_na)
