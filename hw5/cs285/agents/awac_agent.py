@@ -51,7 +51,7 @@ class AWACAgent(DQNAgent):
 
     def get_qvals(self, critic, obs, action):
         # get q-value for a given critic, obs, and action
-        return torch.gather(critic.q_net( ptu.from_numpy(obs)), 1, ptu.from_numpy(action).unsqueeze(1)).squeeze(1) 
+        return torch.gather(critic.q_net( ptu.from_numpy(obs)), 1, ptu.from_numpy(action)).squeeze(1) 
 
     def estimate_advantage(self, ob_no, ac_na, re_n, next_ob_no, terminal_n, n_actions=10):
         # TODO convert to torch tensors
